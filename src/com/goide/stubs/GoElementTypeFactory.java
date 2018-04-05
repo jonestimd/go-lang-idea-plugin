@@ -22,9 +22,9 @@ import com.goide.psi.impl.*;
 import com.goide.stubs.types.*;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class GoElementTypeFactory {

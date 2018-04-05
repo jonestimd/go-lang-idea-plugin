@@ -36,7 +36,7 @@ public class GoSdkLibraryPresentationProvider extends LibraryPresentationProvide
 
   @Override
   @Nullable
-  public Icon getIcon() {
+  public Icon getIcon(DummyLibraryProperties properties) {
     return GoIcons.ICON;
   }
 

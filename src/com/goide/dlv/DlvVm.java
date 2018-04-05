@@ -18,14 +18,15 @@ package com.goide.dlv;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.util.io.NettyKt;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.json.JsonObjectDecoder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.concurrency.Promise;
+import org.jetbrains.concurrency.Promises;
 import org.jetbrains.debugger.*;
-import org.jetbrains.io.ChannelBufferToString;
 import org.jetbrains.io.SimpleChannelInboundHandlerAdapter;
 import org.jetbrains.jsonProtocol.Request;
 
@@ -56,7 +57,7 @@ public class DlvVm extends VmBase {
       protected void messageReceived(ChannelHandlerContext context, Object message) throws Exception {
         if (message instanceof ByteBuf) {
           LOG.info("IN: " + ((ByteBuf)message).toString(CharsetToolkit.UTF8_CHARSET));
-          CharSequence string = ChannelBufferToString.readChars((ByteBuf)message);
+          CharSequence string = NettyKt.readUtf8((ByteBuf)message);
           JsonReaderEx ex = new JsonReaderEx(string);
           getCommandProcessor().processIncomingJson(ex);
         }
@@ -99,7 +100,7 @@ public class DlvVm extends VmBase {
       @NotNull
       @Override
       public Promise<Void> continueVm(@NotNull StepAction stepAction, int stepCount) {
-        return Promise.DONE;
+        return Promises.resolvedPromise();
       }
 
       @NotNull
@@ -111,7 +112,7 @@ public class DlvVm extends VmBase {
       @NotNull
       @Override
       protected Promise<?> doSuspend() {
-        return Promise.DONE;
+        return Promises.resolvedPromise();
       }
     };
   }

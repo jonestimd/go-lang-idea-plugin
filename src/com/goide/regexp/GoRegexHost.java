@@ -53,7 +53,7 @@ public class GoRegexHost implements RegExpLanguageHost {
 
   @Override
   public boolean supportsNamedGroupSyntax(RegExpGroup group) {
-    return group.isPythonNamedGroup(); // only (?P<name>) group is supported
+    return group.getType() == RegExpGroup.Type.PYTHON_NAMED_GROUP; // only (?P<name>) group is supported
   }
 
   @Override

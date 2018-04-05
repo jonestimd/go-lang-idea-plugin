@@ -54,10 +54,10 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
-import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -236,7 +236,7 @@ public class GoImportPackageQuickFix extends LocalQuickFixAndIntentionActionOnPs
       JBList list = new JBList(packagesToImport);
       list.installCellRenderer(o -> {
         JBLabel label = new JBLabel(o.toString(), GoIcons.PACKAGE, SwingConstants.LEFT);
-        label.setBorder(IdeBorderFactory.createEmptyBorder(2, 4, 2, 4));
+        label.setBorder(JBUI.Borders.empty(2, 4));
         return label;
       });
       PopupChooserBuilder builder = JBPopupFactory.getInstance().createListPopupBuilder(list).setRequestFocus(true)

@@ -136,9 +136,9 @@ public class GoRunUtil {
     }
     else {
       //noinspection unchecked
-      field.addBrowseFolderListener(project, new ComponentWithBrowseButton.BrowseFolderActionListener(null, null, field, project,
-                                                                                                      chooseDirectoryDescriptor,
-                                                                                                      TextComponentAccessor.TEXT_FIELD_WITH_HISTORY_WHOLE_TEXT));
+      field.addActionListener(new ComponentWithBrowseButton.BrowseFolderActionListener(null, null, field, project,
+                                                                                       chooseDirectoryDescriptor,
+                                                                                       TextComponentAccessor.TEXT_FIELD_WITH_HISTORY_WHOLE_TEXT));
     }
   }
 

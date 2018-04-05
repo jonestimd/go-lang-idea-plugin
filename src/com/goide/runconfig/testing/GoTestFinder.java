@@ -20,13 +20,13 @@ import com.goide.GoConstants;
 import com.goide.GoFileType;
 import com.goide.psi.GoFile;
 import com.goide.psi.GoFunctionOrMethodDeclaration;
+import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.testIntegration.TestFinder;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -74,13 +74,13 @@ public class GoTestFinder implements TestFinder {
   @Nullable
   @Override
   public PsiElement findSourceElement(@NotNull PsiElement from) {
-    return InjectedLanguageUtil.getTopLevelFile(from);
+    return InjectedLanguageManager.getInstance(from.getProject()).getTopLevelFile(from);
   }
 
   @NotNull
   @Override
   public Collection<PsiElement> findTestsForClass(@NotNull PsiElement element) {
-    PsiFile file = InjectedLanguageUtil.getTopLevelFile(element);
+    PsiFile file = InjectedLanguageManager.getInstance(element.getProject()).getTopLevelFile(element);
     if (file instanceof GoFile) {
       PsiDirectory directory = file.getContainingDirectory();
       PsiFile testFile = directory.findFile(FileUtil.getNameWithoutExtension(file.getName()) + GoConstants.TEST_SUFFIX_WITH_EXTENSION);
@@ -94,7 +94,7 @@ public class GoTestFinder implements TestFinder {
   @NotNull
   @Override
   public Collection<PsiElement> findClassesForTest(@NotNull PsiElement element) {
-    PsiFile testFile = InjectedLanguageUtil.getTopLevelFile(element);
+    PsiFile testFile = InjectedLanguageManager.getInstance(element.getProject()).getTopLevelFile(element);
     if (testFile instanceof GoFile) {
       PsiDirectory directory = testFile.getContainingDirectory();
       PsiFile sourceFile = directory.findFile(StringUtil.trimEnd(testFile.getName(), GoConstants.TEST_SUFFIX_WITH_EXTENSION) + EXTENSION);
@@ -107,6 +107,6 @@ public class GoTestFinder implements TestFinder {
 
   @Override
   public boolean isTest(@NotNull PsiElement element) {
-    return isTestFile(InjectedLanguageUtil.getTopLevelFile(element));
+    return isTestFile(InjectedLanguageManager.getInstance(element.getProject()).getTopLevelFile(element));
   }
 }

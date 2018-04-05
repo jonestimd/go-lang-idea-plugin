@@ -42,6 +42,7 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerUtil;
+import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.*;
 import com.intellij.xdebugger.frame.presentation.XNumericValuePresentation;
@@ -105,8 +106,8 @@ class DlvXValue extends XNamedValue {
   public XValueModifier getModifier() {
     return new XValueModifier() {
       @Override
-      public void setValue(@NotNull String newValue, @NotNull XModificationCallback callback) {
-        myProcessor.send(new DlvRequest.SetSymbol(myVariable.name, newValue, myFrameId))
+      public void setValue(@NotNull XExpression expression, @NotNull XModificationCallback callback) {
+        myProcessor.send(new DlvRequest.SetSymbol(myVariable.name, expression.getExpression(), myFrameId))
           .processed(o -> {
             if (o != null) {
               callback.valueModified();

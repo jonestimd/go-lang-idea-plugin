@@ -22,8 +22,8 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.NameSuggestionsField;
 import com.intellij.refactoring.ui.RefactoringDialog;
-import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,7 +84,7 @@ class GoIntroduceVariableDialog extends RefactoringDialog {
 
     String[] names = ArrayUtil.toStringArray(myOperation.getSuggestedNames());
     myNameField = new NameSuggestionsField(names, myOperation.getProject(), GoFileType.INSTANCE);
-    myNameField.setBorder(IdeBorderFactory.createEmptyBorder(3, 5, 2, 3));
+    myNameField.setBorder(JBUI.Borders.empty(3, 5, 2, 3));
     myNameField.addDataChangedListener(this::validateButtons);
 
     JLabel label = new JLabel(UIUtil.replaceMnemonicAmpersand(RefactoringBundle.message("name.prompt")));

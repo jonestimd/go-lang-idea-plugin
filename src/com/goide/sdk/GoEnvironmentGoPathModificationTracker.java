@@ -48,7 +48,7 @@ public class GoEnvironmentGoPathModificationTracker {
     }
     recalculateFiles();
     
-    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileAdapter() {
+    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
       @Override
       public void fileCreated(@NotNull VirtualFileEvent event) {
         handleEvent(event);

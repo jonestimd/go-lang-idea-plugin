@@ -77,7 +77,7 @@ public class GoSdkConfigurable implements SearchableConfigurable, Configurable.N
       myComponent.setPreferredSize(new Dimension(400, -1));
     }
     FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor().withTitle("Select GOROOT");
-    mySdkPathField.addBrowseFolderListener(myProject, new MyBrowseFolderListener(chooserDescriptor));
+    mySdkPathField.addActionListener(new MyBrowseFolderListener(chooserDescriptor));
     listenForPathUpdate();
     Disposer.register(myDisposable, mySdkPathField);
   }

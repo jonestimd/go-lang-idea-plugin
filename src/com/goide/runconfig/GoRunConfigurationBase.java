@@ -116,7 +116,7 @@ public abstract class GoRunConfigurationBase<RunningState extends GoRunningState
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
     super.writeExternal(element);
-    writeModule(element);
+    getConfigurationModule().writeExternal(element);
     addNonEmptyElement(element, WORKING_DIRECTORY_NAME, myWorkingDirectory);
     addNonEmptyElement(element, GO_PARAMETERS_NAME, myGoParams);
     addNonEmptyElement(element, PARAMETERS_NAME, myParams);
@@ -124,13 +124,13 @@ public abstract class GoRunConfigurationBase<RunningState extends GoRunningState
       EnvironmentVariablesComponent.writeExternal(element, myCustomEnvironment);
     }
     if (!myPassParentEnvironment) {
-      JDOMExternalizerUtil.addElementWithValueAttribute(element, PASS_PARENT_ENV, "false");
+      JDOMExternalizerUtil.writeCustomField(element, PASS_PARENT_ENV, "false");
     }
   }
 
   protected void addNonEmptyElement(@NotNull Element element, @NotNull String attributeName, @Nullable String value) {
     if (StringUtil.isNotEmpty(value)) {
-      JDOMExternalizerUtil.addElementWithValueAttribute(element, attributeName, value);
+      JDOMExternalizerUtil.writeCustomField(element, attributeName, value);
     }
   }
 
@@ -138,16 +138,16 @@ public abstract class GoRunConfigurationBase<RunningState extends GoRunningState
   public void readExternal(@NotNull Element element) throws InvalidDataException {
     super.readExternal(element);
     readModule(element);
-    myGoParams = StringUtil.notNullize(JDOMExternalizerUtil.getFirstChildValueAttribute(element, GO_PARAMETERS_NAME));
-    myParams = StringUtil.notNullize(JDOMExternalizerUtil.getFirstChildValueAttribute(element, PARAMETERS_NAME));
+    myGoParams = StringUtil.notNullize(JDOMExternalizerUtil.readCustomField(element, GO_PARAMETERS_NAME));
+    myParams = StringUtil.notNullize(JDOMExternalizerUtil.readCustomField(element, PARAMETERS_NAME));
 
-    String workingDirectoryValue = JDOMExternalizerUtil.getFirstChildValueAttribute(element, WORKING_DIRECTORY_NAME);
+    String workingDirectoryValue = JDOMExternalizerUtil.readCustomField(element, WORKING_DIRECTORY_NAME);
     if (workingDirectoryValue != null) {
       myWorkingDirectory = workingDirectoryValue;
     }
     EnvironmentVariablesComponent.readExternal(element, myCustomEnvironment);
 
-    String passEnvValue = JDOMExternalizerUtil.getFirstChildValueAttribute(element, PASS_PARENT_ENV);
+    String passEnvValue = JDOMExternalizerUtil.readCustomField(element, PASS_PARENT_ENV);
     myPassParentEnvironment = passEnvValue == null || Boolean.valueOf(passEnvValue);
   }
 

@@ -24,7 +24,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.Promise;
+import org.jetbrains.concurrency.Promises;
 import org.jetbrains.rpc.CommandProcessor;
 import org.jetbrains.rpc.CommandProcessorKt;
 import org.jetbrains.rpc.RequestCallback;
@@ -59,7 +59,7 @@ public abstract class DlvCommandProcessor extends CommandProcessor<JsonReaderEx,
       callback.onSuccess(response, this);
     }
     else {
-      callback.onError(Promise.createError(createMessage(response)));
+      callback.onError(Promises.createError(createMessage(response)));
     }
   }
 

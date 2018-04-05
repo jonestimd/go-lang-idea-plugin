@@ -35,7 +35,10 @@ allprojects {
   apply plugin: 'java'
   sourceCompatibility = javaVersion
   targetCompatibility = javaTargetVersion
-  tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+  tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    // options.compilerArgs += '-Xlint:deprecation'
+  }
 
   sourceSets {
     main {

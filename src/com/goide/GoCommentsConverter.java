@@ -25,6 +25,7 @@ import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -164,7 +165,7 @@ public class GoCommentsConverter {
         text = textWithLinks.toString();
       }
       
-      return nice ? StringUtil.replace(text, new String[]{"``", "''"}, new String[]{"&ldquo;", "&rdquo;"}) : text;
+      return nice ? StringUtil.replace(text, Arrays.asList("``", "''"), Arrays.asList("&ldquo;", "&rdquo;")) : text;
     }
 
     void flushBlock(@NotNull String wrapTag) {

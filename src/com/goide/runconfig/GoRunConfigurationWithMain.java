@@ -43,7 +43,7 @@ public abstract class GoRunConfigurationWithMain<T extends GoRunningState> exten
   @Override
   public void readExternal(@NotNull Element element) throws InvalidDataException {
     super.readExternal(element);
-    myFilePath = StringUtil.notNullize(JDOMExternalizerUtil.getFirstChildValueAttribute(element, FILE_PATH_ATTRIBUTE_NAME));
+    myFilePath = StringUtil.notNullize(JDOMExternalizerUtil.readCustomField(element, FILE_PATH_ATTRIBUTE_NAME));
   }
 
   @Override

@@ -25,13 +25,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@State(
-  name = "GoExcludedPaths",
-  storages = {
-    @Storage(id = "default", file = StoragePathMacros.PROJECT_FILE),
-    @Storage(id = "dir", file = StoragePathMacros.PROJECT_CONFIG_DIR + "/goExcludedPaths.xml", scheme = StorageScheme.DIRECTORY_BASED)
-  }
-)
+@State(name = "GoExcludedPaths", storages = @Storage("goExcludedPaths.xml"))
 public class GoExcludedPathsSettings extends SimpleModificationTracker implements PersistentStateComponent<GoExcludedPathsSettings> {
   private String[] myExcludedPackages = ArrayUtil.EMPTY_STRING_ARRAY;
 

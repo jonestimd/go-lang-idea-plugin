@@ -38,6 +38,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -103,7 +104,7 @@ public class GoMultiplePackagesQuickFix extends LocalQuickFixAndIntentionActionO
     JBList list = new JBList(myPackages);
     list.installCellRenderer(o -> {
       JBLabel label = new JBLabel(o.toString());
-      label.setBorder(IdeBorderFactory.createEmptyBorder(2, 4, 2, 4));
+      label.setBorder(JBUI.Borders.empty(2, 4));
       return label;
     });
 

@@ -83,12 +83,6 @@ public class GoParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 
   @Nullable
   @Override
-  public Object[] getParametersForDocumentation(Object p, ParameterInfoContext context) {
-    return ArrayUtil.EMPTY_OBJECT_ARRAY;
-  }
-
-  @Nullable
-  @Override
   public GoArgumentList findElementForParameterInfo(@NotNull CreateParameterInfoContext context) {
     // todo: see ParameterInfoUtils.findArgumentList
     return getList(context);
@@ -127,17 +121,6 @@ public class GoParameterInfoHandler implements ParameterInfoHandlerWithTabAction
   @Override
   public void updateParameterInfo(@NotNull GoArgumentList list, @NotNull UpdateParameterInfoContext context) {
     context.setCurrentParameter(ParameterInfoUtils.getCurrentParameterIndex(list.getNode(), context.getOffset(), GoTypes.COMMA));
-  }
-
-  @Nullable
-  @Override
-  public String getParameterCloseChars() {
-    return ",(";
-  }
-
-  @Override
-  public boolean tracksParameterIndex() {
-    return true;
   }
 
   @Override

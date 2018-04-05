@@ -72,7 +72,7 @@ public class GoModuleLibrariesInitializer implements ModuleComponent {
   @NotNull private final Set<LocalFileSystem.WatchRequest> myWatchedRequests = ContainerUtil.newHashSet();
 
   @NotNull private final Module myModule;
-  @NotNull private final VirtualFileAdapter myFilesListener = new VirtualFileAdapter() {
+  @NotNull private final VirtualFileListener myFilesListener = new VirtualFileListener() {
     @Override
     public void fileCreated(@NotNull VirtualFileEvent event) {
       if (GoConstants.VENDOR.equals(event.getFileName()) && event.getFile().isDirectory()) {
@@ -99,7 +99,7 @@ public class GoModuleLibrariesInitializer implements ModuleComponent {
   @Override
   public void moduleAdded() {
     if (!myModuleInitialized) {
-      myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
         @Override
         public void rootsChanged(ModuleRootEvent event) {
           scheduleUpdate();
@@ -304,11 +304,6 @@ public class GoModuleLibrariesInitializer implements ModuleComponent {
     myLastHandledExclusions.clear();
     LocalFileSystem.getInstance().removeWatchedRoots(myWatchedRequests);
     myWatchedRequests.clear();
-  }
-
-  @Override
-  public void projectOpened() {
-
   }
 
   @Override

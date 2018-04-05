@@ -21,7 +21,7 @@ import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public class GoIdeaSdkService extends GoSdkService {
   public GoIdeaSdkService(@NotNull Project project) {
     super(project);
-    myProject.getMessageBus().connect(project).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+    myProject.getMessageBus().connect(project).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         incModificationCount();
@@ -81,7 +81,7 @@ public class GoIdeaSdkService extends GoSdkService {
 
   @Override
   public boolean isGoModule(@Nullable Module module) {
-    return super.isGoModule(module) && ModuleUtil.getModuleType(module) == GoModuleType.getInstance();
+    return super.isGoModule(module) && ModuleType.get(module) == GoModuleType.getInstance();
   }
 
   private Sdk getGoSdk(@Nullable Module module) {

@@ -87,10 +87,10 @@ public class GoAppEngineRunConfiguration extends GoRunConfigurationBase<GoAppEng
   @Override
   public void readExternal(@NotNull Element element) throws InvalidDataException {
     super.readExternal(element);
-    myHost = JDOMExternalizerUtil.getFirstChildValueAttribute(element, HOST_NAME);
-    myPort = JDOMExternalizerUtil.getFirstChildValueAttribute(element, PORT_NAME);
-    myAdminPort = JDOMExternalizerUtil.getFirstChildValueAttribute(element, ADMIN_PORT_NAME);
-    myConfigFile = JDOMExternalizerUtil.getFirstChildValueAttribute(element, CONFIG_FILE);
+    myHost = JDOMExternalizerUtil.readCustomField(element, HOST_NAME);
+    myPort = JDOMExternalizerUtil.readCustomField(element, PORT_NAME);
+    myAdminPort = JDOMExternalizerUtil.readCustomField(element, ADMIN_PORT_NAME);
+    myConfigFile = JDOMExternalizerUtil.readCustomField(element, CONFIG_FILE);
   }
 
   @Override

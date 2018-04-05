@@ -18,7 +18,6 @@ package com.goide;
 
 import com.intellij.facet.ui.ValidationResult;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.DirectoryProjectGenerator;
@@ -34,12 +33,6 @@ public class GoProjectGenerator implements DirectoryProjectGenerator {
   @Override
   public String getName() {
     return GoConstants.GO;
-  }
-
-  @Nullable
-  @Override
-  public Object showGenerationSettings(VirtualFile baseDir) throws ProcessCanceledException {
-    return null;
   }
 
   @Nullable

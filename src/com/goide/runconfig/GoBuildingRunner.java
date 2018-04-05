@@ -32,7 +32,7 @@ import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.runners.AsyncGenericProgramRunner;
+import com.intellij.execution.runners.AsyncProgramRunner;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.RunContentBuilder;
 import com.intellij.execution.ui.RunContentDescriptor;
@@ -41,7 +41,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.net.NetUtils;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugProcessStarter;
 import com.intellij.xdebugger.XDebugSession;
@@ -54,10 +53,11 @@ import org.jetbrains.debugger.connection.RemoteVmConnection;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
-public class GoBuildingRunner extends AsyncGenericProgramRunner {
+public class GoBuildingRunner extends AsyncProgramRunner {
   private static final String ID = "GoBuildingRunner";
 
   @NotNull
@@ -77,7 +77,7 @@ public class GoBuildingRunner extends AsyncGenericProgramRunner {
 
   @NotNull
   @Override
-  protected Promise<RunProfileStarter> prepare(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state)
+  protected Promise<RunProfileStarter> execute(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state)
     throws ExecutionException {
     File outputFile = getOutputFile(environment, (GoApplicationRunningState)state);
     FileDocumentManager.getInstance().saveAllDocuments();
@@ -198,7 +198,7 @@ public class GoBuildingRunner extends AsyncGenericProgramRunner {
           public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException {
             RemoteVmConnection connection = new DlvRemoteVmConnection();
             DlvDebugProcess process = new DlvDebugProcess(session, connection, executionResult);
-            connection.open(new InetSocketAddress(NetUtils.getLoopbackAddress(), port));
+            connection.open(new InetSocketAddress(InetAddress.getLoopbackAddress(), port));
             return process;
           }
         }).getRunContentDescriptor();

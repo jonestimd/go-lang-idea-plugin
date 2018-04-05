@@ -117,7 +117,7 @@ public abstract class GoTestEventsConverterBaseImpl extends OutputToGeneralTestE
   }
 
   @Override
-  public final void flushBufferBeforeTerminating() {
+  public final void flushBufferOnProcessTermination(int exitCode) {
     try {
       if (!finishDelayedTest(myVisitor)) {
         if (myCurrentTestName != null) {
@@ -128,7 +128,7 @@ public abstract class GoTestEventsConverterBaseImpl extends OutputToGeneralTestE
     catch (ParseException ignore) {
     }
     myVisitor = null;
-    super.flushBufferBeforeTerminating();
+    super.flushBufferOnProcessTermination(exitCode);
   }
 
   protected void finishTest(@NotNull String name, @NotNull TestResult result, @Nullable ServiceMessageVisitor visitor)

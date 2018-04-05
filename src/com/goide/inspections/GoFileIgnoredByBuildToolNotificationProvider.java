@@ -57,7 +57,7 @@ public class GoFileIgnoredByBuildToolNotificationProvider extends EditorNotifica
     myProject = project;
     MessageBusConnection connection = myProject.getMessageBus().connect(myProject);
     connection.subscribe(GoModuleSettings.TOPIC, module -> notifications.updateAllNotifications());
-    connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
+    connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
       @Override
       public void after(@NotNull List<? extends VFileEvent> events) {
         if (!myProject.isDisposed()) {

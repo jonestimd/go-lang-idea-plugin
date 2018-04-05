@@ -16,9 +16,9 @@
 
 package com.goide.psi.impl;
 
-import com.intellij.psi.scope.BaseScopeProcessor;
+import com.intellij.psi.scope.PsiScopeProcessor;
 
-abstract public class GoScopeProcessor extends BaseScopeProcessor {
+abstract public class GoScopeProcessor implements PsiScopeProcessor {
   public boolean isCompletion() {
     return false;
   }

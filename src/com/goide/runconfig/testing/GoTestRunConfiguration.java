@@ -135,19 +135,19 @@ public class GoTestRunConfiguration extends GoRunConfigurationBase<GoTestRunning
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
     super.writeExternal(element);
-    JDOMExternalizerUtil.addElementWithValueAttribute(element, FRAMEWORK_ATTRIBUTE_NAME, myTestFramework.getName());
-    JDOMExternalizerUtil.addElementWithValueAttribute(element, KIND_ATTRIBUTE_NAME, myKind.name());
+    JDOMExternalizerUtil.writeCustomField(element, FRAMEWORK_ATTRIBUTE_NAME, myTestFramework.getName());
+    JDOMExternalizerUtil.writeCustomField(element, KIND_ATTRIBUTE_NAME, myKind.name());
     if (!myPackage.isEmpty()) {
-      JDOMExternalizerUtil.addElementWithValueAttribute(element, PACKAGE_ATTRIBUTE_NAME, myPackage);
+      JDOMExternalizerUtil.writeCustomField(element, PACKAGE_ATTRIBUTE_NAME, myPackage);
     }
     if (!myDirectoryPath.isEmpty()) {
-      JDOMExternalizerUtil.addElementWithValueAttribute(element, DIRECTORY_ATTRIBUTE_NAME, myDirectoryPath);
+      JDOMExternalizerUtil.writeCustomField(element, DIRECTORY_ATTRIBUTE_NAME, myDirectoryPath);
     }
     if (!myFilePath.isEmpty()) {
-      JDOMExternalizerUtil.addElementWithValueAttribute(element, FILE_PATH_ATTRIBUTE_NAME, myFilePath);
+      JDOMExternalizerUtil.writeCustomField(element, FILE_PATH_ATTRIBUTE_NAME, myFilePath);
     }
     if (!myPattern.isEmpty()) {
-      JDOMExternalizerUtil.addElementWithValueAttribute(element, PATTERN_ATTRIBUTE_NAME, myPattern);
+      JDOMExternalizerUtil.writeCustomField(element, PATTERN_ATTRIBUTE_NAME, myPattern);
     }
   }
 
@@ -155,17 +155,17 @@ public class GoTestRunConfiguration extends GoRunConfigurationBase<GoTestRunning
   public void readExternal(@NotNull Element element) throws InvalidDataException {
     super.readExternal(element);
     try {
-      String kindName = JDOMExternalizerUtil.getFirstChildValueAttribute(element, KIND_ATTRIBUTE_NAME);
+      String kindName = JDOMExternalizerUtil.readCustomField(element, KIND_ATTRIBUTE_NAME);
       myKind = kindName != null ? Kind.valueOf(kindName) : Kind.DIRECTORY;
     }
     catch (IllegalArgumentException e) {
       myKind = Kind.DIRECTORY;
     }
-    myPackage = StringUtil.notNullize(JDOMExternalizerUtil.getFirstChildValueAttribute(element, PACKAGE_ATTRIBUTE_NAME));
-    myDirectoryPath = StringUtil.notNullize(JDOMExternalizerUtil.getFirstChildValueAttribute(element, DIRECTORY_ATTRIBUTE_NAME));
-    myFilePath = StringUtil.notNullize(JDOMExternalizerUtil.getFirstChildValueAttribute(element, FILE_PATH_ATTRIBUTE_NAME));
-    myPattern = StringUtil.notNullize(JDOMExternalizerUtil.getFirstChildValueAttribute(element, PATTERN_ATTRIBUTE_NAME));
-    myTestFramework = GoTestFramework.fromName(JDOMExternalizerUtil.getFirstChildValueAttribute(element, FRAMEWORK_ATTRIBUTE_NAME));
+    myPackage = StringUtil.notNullize(JDOMExternalizerUtil.readCustomField(element, PACKAGE_ATTRIBUTE_NAME));
+    myDirectoryPath = StringUtil.notNullize(JDOMExternalizerUtil.readCustomField(element, DIRECTORY_ATTRIBUTE_NAME));
+    myFilePath = StringUtil.notNullize(JDOMExternalizerUtil.readCustomField(element, FILE_PATH_ATTRIBUTE_NAME));
+    myPattern = StringUtil.notNullize(JDOMExternalizerUtil.readCustomField(element, PATTERN_ATTRIBUTE_NAME));
+    myTestFramework = GoTestFramework.fromName(JDOMExternalizerUtil.readCustomField(element, FRAMEWORK_ATTRIBUTE_NAME));
   }
 
   @NotNull

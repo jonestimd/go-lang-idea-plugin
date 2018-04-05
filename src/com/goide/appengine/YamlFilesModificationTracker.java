@@ -37,7 +37,7 @@ import java.util.Collection;
 
 public class YamlFilesModificationTracker extends SimpleModificationTracker {
   public YamlFilesModificationTracker(@NotNull Project project) {
-    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileAdapter() {
+    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
       @Override
       public void fileCreated(@NotNull VirtualFileEvent event) {
         handleEvent(event);

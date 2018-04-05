@@ -23,8 +23,8 @@ import com.goide.util.GoUtil;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.IdeBorderFactory;
@@ -96,7 +96,7 @@ public class GoBuildTagsUI implements Disposable {
   public void initPanel(@NotNull Module module) {
     if (!module.isDisposed()) {
       MessageBusConnection connection = module.getMessageBus().connect(this);
-      connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
         @Override
         public void rootsChanged(ModuleRootEvent event) {
           initComboValues(module);

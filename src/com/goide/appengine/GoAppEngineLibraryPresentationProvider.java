@@ -37,7 +37,7 @@ public class GoAppEngineLibraryPresentationProvider extends LibraryPresentationP
 
   @Nullable
   @Override
-  public Icon getIcon() {
+  public Icon getIcon(DummyLibraryProperties properties) {
     return GoAppEngineIcons.ICON;
   }
 

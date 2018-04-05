@@ -23,8 +23,8 @@ import com.intellij.ProjectTopics;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.MutableCollectionComboBoxModel;
@@ -63,7 +63,7 @@ public class GoVendoringUI implements Disposable {
       MessageBusConnection connection = module.getMessageBus().connect(this);
       //noinspection unchecked
       myVendoringEnabledCombo.setModel(myVendoringEnabledComboModel);
-      connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
         @Override
         public void rootsChanged(ModuleRootEvent event) {
           initComboValues(module);
