@@ -84,6 +84,7 @@ public class GotestGenerateAction extends GoGenerateTestActionBase {
       if (myType.getParamType() != null) {
         testingQualifier = importTestingPackageIfNeeded((GoFile)file);
         PsiDocumentManager.getInstance(file.getProject()).doPostponedOperationsAndUnblockDocument(editor.getDocument());
+        editor.getCaretModel().moveToOffset(editor.getDocument().getTextLength());
       }
       String functionText = "func " + myType.getPrefix();
       int offset = functionText.length();
