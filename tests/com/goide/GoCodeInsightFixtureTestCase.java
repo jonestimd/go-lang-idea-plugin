@@ -65,7 +65,7 @@ abstract public class GoCodeInsightFixtureTestCase extends LightPlatformCodeInsi
     }
     String full = DebugUtil.stubTreeToString(GoFileElementType.INSTANCE.getBuilder().buildStubTree(psi));
     psi.putUserData(IndexingDataKeys.VIRTUAL_FILE, file);
-    FileContentImpl content = new FileContentImpl(file, fileContent, file.getCharset());
+    FileContentImpl content = new FileContentImpl(file, fileContent, -1L);
     PsiFile psiFile = content.getPsiFile();
     String fast = DebugUtil.stubTreeToString(GoFileElementType.INSTANCE.getBuilder().buildStubTree(psiFile));
     if (!Comparing.strEqual(full, fast)) {
@@ -101,6 +101,7 @@ abstract public class GoCodeInsightFixtureTestCase extends LightPlatformCodeInsi
   @Override
   protected void tearDown() throws Exception {
     try {
+      if (isSdkAware()) tearDownProjectSdk();
       GoApplicationLibrariesService.getInstance().setLibraryRootUrls();
       GoModuleSettings.getInstance(myFixture.getModule()).setBuildTargetSettings(new GoBuildTargetSettings());
       GoModuleSettings.getInstance(myFixture.getModule()).setVendoringEnabled(ThreeState.UNSURE);
@@ -144,6 +145,14 @@ abstract public class GoCodeInsightFixtureTestCase extends LightPlatformCodeInsi
       Sdk sdk = getProjectDescriptor().getSdk();
       ProjectJdkTable.getInstance().addJdk(sdk);
       ProjectRootManager.getInstance(myFixture.getProject()).setProjectSdk(sdk);
+    });
+  }
+
+  private void tearDownProjectSdk() {
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      Sdk sdk = ProjectRootManager.getInstance(myFixture.getProject()).getProjectSdk();
+      ProjectRootManager.getInstance(myFixture.getProject()).setProjectSdk(null);
+      ProjectJdkTable.getInstance().removeJdk(sdk);
     });
   }
 
