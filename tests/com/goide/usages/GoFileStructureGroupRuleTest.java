@@ -21,14 +21,12 @@ import com.goide.psi.GoFunctionDeclaration;
 import com.goide.psi.GoTypeSpec;
 import com.intellij.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.usages.PsiElementUsageGroupBase;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageGroup;
-import com.intellij.usages.UsageInfo2UsageAdapter;
+import com.intellij.usages.*;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 
 public class GoFileStructureGroupRuleTest extends GoCodeInsightFixtureTestCase {
   public void testMethod() {
@@ -41,10 +39,11 @@ public class GoFileStructureGroupRuleTest extends GoCodeInsightFixtureTestCase {
 
   @NotNull
   private PsiElement getGroupElement() {
-    UsageGroup group = GoFileStructureGroupRuleProvider.USAGE_GROUPING_RULE.groupUsage(findSingleUsage());
-    assertNotNull(group);
-    assertInstanceOf(group, PsiElementUsageGroupBase.class);
-    return ((PsiElementUsageGroupBase)group).getElement();
+    List<UsageGroup> groups = new GoFileStructureGroupRuleProvider().getUsageGroupingRule(null).getParentGroupsFor(findSingleUsage(), new UsageTarget[]{});
+    assertNotNull(groups);
+    assertSize(1, groups);
+    assertInstanceOf(groups.get(0), PsiElementUsageGroupBase.class);
+    return ((PsiElementUsageGroupBase)groups.get(0)).getElement();
   }
 
   @NotNull
