@@ -22,6 +22,7 @@ import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.WhitespacesBinders;
 import com.intellij.lang.impl.PsiBuilderAdapter;
+import com.intellij.lang.impl.PsiBuilderImpl.ProductionMarker;
 import com.intellij.lang.parser.GeneratedParserUtilBase;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -59,7 +60,7 @@ public class GoParserUtil extends GeneratedParserUtilBase {
         m.rollbackTo();
         return false;
       }
-      i += type == GoTypes.LBRACE ? 1 : type == GoTypes.RBRACE ? -1 : 0;  
+      i += type == GoTypes.LBRACE ? 1 : type == GoTypes.RBRACE ? -1 : 0;
       builder_.advanceLexer();
     }
     while (i > 0 && !builder_.eof());
@@ -70,7 +71,7 @@ public class GoParserUtil extends GeneratedParserUtilBase {
     else {
       m.rollbackTo();
     }
-    return result;  
+    return result;
   }
 
   private static boolean nextIdentifier(PsiBuilder builder_) {
@@ -102,7 +103,7 @@ public class GoParserUtil extends GeneratedParserUtilBase {
     TObjectIntHashMap<String> map = getParsingModes(builder_);
 
     TObjectIntHashMap<String> prev = new TObjectIntHashMap<>();
-    
+
     for (String mode : modes) {
       int p = map.get(mode);
       if (p > 0) {
@@ -110,14 +111,14 @@ public class GoParserUtil extends GeneratedParserUtilBase {
         prev.put(mode, p);
       }
     }
-    
+
     boolean result = parser.parse(builder_, level_);
-    
+
     prev.forEachEntry((mode, p) -> {
       map.put(mode, p);
       return true;
     });
-    
+
     return result;
   }
 
@@ -140,7 +141,7 @@ public class GoParserUtil extends GeneratedParserUtilBase {
     IElementType type = marker != null ? marker.getTokenType() : null;
     return type == GoTypes.ARRAY_OR_SLICE_TYPE || type == GoTypes.MAP_TYPE || type == GoTypes.STRUCT_TYPE;
   }
-  
+
   public static boolean keyOrValueExpression(@NotNull PsiBuilder builder_, int level) {
     PsiBuilder.Marker m = enter_section_(builder_);
     boolean r = GoParser.Expression(builder_, level + 1, -1);
@@ -168,7 +169,7 @@ public class GoParserUtil extends GeneratedParserUtilBase {
   public static boolean exitMode(@NotNull PsiBuilder builder_, @SuppressWarnings("UnusedParameters") int level, String mode) {
     return exitMode(builder_, level,mode, false);
   }
-  
+
   public static boolean exitModeSafe(@NotNull PsiBuilder builder_, @SuppressWarnings("UnusedParameters") int level, String mode) {
     return exitMode(builder_, level,mode, true);
   }
@@ -184,10 +185,11 @@ public class GoParserUtil extends GeneratedParserUtilBase {
   private static PsiBuilder.Marker getCurrentMarker(@NotNull PsiBuilder builder_) {
     try {
       for (Field field : builder_.getClass().getDeclaredFields()) {
-        if ("MyList".equals(field.getType().getSimpleName())) {
+        if ("MarkerPool".equals(field.getType().getSimpleName())) {
           field.setAccessible(true);
           //noinspection unchecked
-          return ContainerUtil.getLastItem((List<PsiBuilder.Marker>)field.get(builder_));
+          List<PsiBuilder.Marker> markers = (List<PsiBuilder.Marker>)field.get(builder_);
+          return ContainerUtil.findLast(markers, marker -> marker instanceof ProductionMarker && ((ProductionMarker)marker).getStartIndex() >= 0);
         }
       }
     }

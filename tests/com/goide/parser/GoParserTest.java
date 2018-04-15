@@ -32,6 +32,7 @@ public class GoParserTest extends GoParserTestBase {
   public void testIfWithNew()                       { doTest(true);  }
   public void testRanges()                          { doTest(true);  }
   public void testIncompleteRanges()                { doTest(false); }
+  public void testCommentFollowsEmptyImport()       { doTest(true);  }
   public void testTorture()                         { doTest(true);  }
   public void testLiteralValues()                   { doTest(true);  }
   public void testLiteralValuesElse()               { doTest(true);  }
