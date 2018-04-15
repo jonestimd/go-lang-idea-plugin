@@ -48,7 +48,7 @@ public abstract class GoEventsConverterTestCase extends GoCodeInsightFixtureTest
     catch (IOException | ParseException e) {
       throw new RuntimeException(e);
     }
-    ((OutputToGeneralTestEventsConverter)converter).flushBufferBeforeTerminating();
+    ((OutputToGeneralTestEventsConverter)converter).flushBufferOnProcessTermination(0);
     Disposer.dispose((OutputToGeneralTestEventsConverter)converter);
     assertSameLinesWithFile(getTestDataPath() + "/" + getTestName(true) + "-expected.txt", serviceMessageVisitor.getLog());
   }
