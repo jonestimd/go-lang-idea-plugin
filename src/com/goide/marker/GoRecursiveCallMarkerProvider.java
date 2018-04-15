@@ -16,6 +16,7 @@
 
 package com.goide.marker;
 
+import com.goide.GoTypes;
 import com.goide.psi.GoCallExpr;
 import com.goide.psi.GoFunctionOrMethodDeclaration;
 import com.goide.psi.impl.GoPsiImplUtil;
@@ -28,6 +29,7 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -47,19 +49,22 @@ public class GoRecursiveCallMarkerProvider implements LineMarkerProvider {
   public void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result) {
     Set<Integer> lines = ContainerUtil.newHashSet();
     for (PsiElement element : elements) {
-      if (element instanceof GoCallExpr) {
-        PsiElement resolve = GoPsiImplUtil.resolveCall((GoCallExpr)element);
-        if (resolve instanceof GoFunctionOrMethodDeclaration) {
-          if (isRecursiveCall(element, (GoFunctionOrMethodDeclaration)resolve)) {
-            PsiDocumentManager instance = PsiDocumentManager.getInstance(element.getProject());
-            Document document = instance.getDocument(element.getContainingFile());
-            int textOffset = element.getTextOffset();
-            if (document == null) continue;
-            int lineNumber = document.getLineNumber(textOffset);
-            if (!lines.contains(lineNumber)) {
-              result.add(new RecursiveMethodCallMarkerInfo(element));
+      if (element instanceof LeafPsiElement && ((LeafPsiElement)element).getElementType() == GoTypes.IDENTIFIER) {
+        GoCallExpr callExpr = PsiTreeUtil.getParentOfType(element, GoCallExpr.class);
+        if (callExpr != null) {
+          PsiElement resolve = GoPsiImplUtil.resolveCall(callExpr);
+          if (resolve instanceof GoFunctionOrMethodDeclaration) {
+            if (isRecursiveCall(callExpr, (GoFunctionOrMethodDeclaration)resolve)) {
+              PsiDocumentManager instance = PsiDocumentManager.getInstance(element.getProject());
+              Document document = instance.getDocument(element.getContainingFile());
+              int textOffset = element.getTextOffset();
+              if (document == null) continue;
+              int lineNumber = document.getLineNumber(textOffset);
+              if (!lines.contains(lineNumber)) {
+                result.add(new RecursiveMethodCallMarkerInfo(element));
+              }
+              lines.add(lineNumber);
             }
-            lines.add(lineNumber);
           }
         }
       }
