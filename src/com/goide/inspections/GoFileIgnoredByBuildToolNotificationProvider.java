@@ -20,6 +20,7 @@ import com.goide.GoFileType;
 import com.goide.project.GoModuleSettings;
 import com.goide.util.GoUtil;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.module.Module;
@@ -33,7 +34,6 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.containers.ContainerUtil;
@@ -83,7 +83,7 @@ public class GoFileIgnoredByBuildToolNotificationProvider extends EditorNotifica
   public EditorNotificationPanel createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor) {
     if (file.getFileType() == GoFileType.INSTANCE) {
       PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
-      if (InjectedLanguageUtil.findInjectionHost(psiFile) != null) {
+      if (psiFile != null && InjectedLanguageManager.getInstance(psiFile.getProject()).getInjectionHost(psiFile) != null) {
         return null;
       }
       Module module = psiFile != null ? ModuleUtilCore.findModuleForPsiElement(psiFile) : null;
