@@ -25,6 +25,9 @@ import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.OrderEntryUtil;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
+import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -52,7 +55,7 @@ public class GoPathLibraryTest extends GoCodeInsightFixtureTestCase {
       }
     };
   }
-  private final Collection<VirtualFile> contentRootsToClean = ContainerUtil.newHashSet();
+  private final Collection<String> contentRootsToClean = ContainerUtil.newHashSet();
   private final Collection<VirtualFile> tempRootsToClean = ContainerUtil.newHashSet();
 
   @Override
@@ -81,7 +84,7 @@ public class GoPathLibraryTest extends GoCodeInsightFixtureTestCase {
     ModifiableRootModel model = ModuleRootManager.getInstance(myModule).getModifiableModel();
     try {
       for (ContentEntry entry : model.getContentEntries()) {
-        if (contentRootsToClean.contains(entry.getFile())) {
+        if (contentRootsToClean.contains(entry.getUrl())) {
           model.removeContentEntry(entry);
         }
       }
@@ -91,7 +94,15 @@ public class GoPathLibraryTest extends GoCodeInsightFixtureTestCase {
       contentRootsToClean.clear();
       if (!model.isDisposed()) model.dispose();
     }
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      LibraryTableBase libraryTable = (LibraryTableBase)LibraryTablesRegistrar.getInstance().getLibraryTable(myModule.getProject());
+      libraryTable.removeLibrary(libraryTable.getLibraryByName("GOPATH <" + myModule.getName() + ">"));
+    });
     super.tearDown();
+  }
+
+  private static <T> T runWriteAction(ThrowableComputable<T, IOException> computable) throws IOException {
+    return ApplicationManager.getApplication().runWriteAction(computable);
   }
 
   /**
@@ -102,8 +113,9 @@ public class GoPathLibraryTest extends GoCodeInsightFixtureTestCase {
    */
   public void testAddGoPathAsLibrary() throws IOException {
     VirtualFile goPath = createGoPath();
-    VirtualFile goPathContent = goPath.createChildDirectory(this, "src").createChildDirectory(this, "test");
+    VirtualFile goPathContent = runWriteAction(() -> goPath.createChildDirectory(this, "src").createChildDirectory(this, "test"));
     GoApplicationLibrariesService.getInstance().setLibraryRootUrls(goPath.getUrl());
+
     assertLibrary(Collections.singletonList(goPathContent.getUrl()), "temp:///src");
   }
 
@@ -116,11 +128,13 @@ public class GoPathLibraryTest extends GoCodeInsightFixtureTestCase {
    */
   public void testExcludeChildContentRootFromLibrary() throws IOException {
     VirtualFile goPath = createGoPath();
-    VirtualFile src = goPath.createChildDirectory(this, "src");
-    VirtualFile contentRoot = src.createChildDirectory(this, "contentRoot");
-    VirtualFile notContentRoot = src.createChildDirectory(this, "notContentRoot");
+    VirtualFile src = runWriteAction(() -> goPath.createChildDirectory(this, "src"));
+    VirtualFile contentRoot = runWriteAction(() -> src.createChildDirectory(this, "contentRoot"));
+    VirtualFile notContentRoot = runWriteAction(() -> src.createChildDirectory(this, "notContentRoot"));
     addContentRoot(contentRoot);
+
     GoApplicationLibrariesService.getInstance().setLibraryRootUrls(goPath.getUrl());
+
     assertLibrary(Collections.singletonList(notContentRoot.getUrl()), "temp:///src", contentRoot.getUrl());
   }
 
@@ -136,11 +150,11 @@ public class GoPathLibraryTest extends GoCodeInsightFixtureTestCase {
    */
   public void testExcludeParentContentRootFromLibrary() throws IOException {
     VirtualFile contentRoot = createGoPath();
-    VirtualFile goPath = contentRoot.createChildDirectory(this, "gopath");
-    VirtualFile goPathContent = goPath.createChildDirectory(this, "src").createChildDirectory(this, "test");
+    VirtualFile goPath = runWriteAction(() -> contentRoot.createChildDirectory(this, "gopath"));
+    VirtualFile goPathContent = runWriteAction(() -> goPath.createChildDirectory(this, "src").createChildDirectory(this, "test"));
 
     VirtualFile otherGoPath = createGoPath();
-    VirtualFile otherGoPathContent = otherGoPath.createChildDirectory(this, "src").createChildDirectory(this, "test");
+    VirtualFile otherGoPathContent = runWriteAction(() -> otherGoPath.createChildDirectory(this, "src").createChildDirectory(this, "test"));
     GoApplicationLibrariesService.getInstance().setLibraryRootUrls(goPath.getUrl(), otherGoPath.getUrl());
     assertLibrary(ContainerUtil.newHashSet(goPathContent.getUrl(), otherGoPathContent.getUrl()), "temp:///src");
 
@@ -157,22 +171,22 @@ public class GoPathLibraryTest extends GoCodeInsightFixtureTestCase {
    */
   public void testUpdateLibraryOnAddingContentRoot() throws IOException {
     VirtualFile goPath = createGoPath();
-    VirtualFile goPathContent = goPath.createChildDirectory(this, "src").createChildDirectory(this, "subdir");
+    VirtualFile goPathContent = runWriteAction(() -> goPath.createChildDirectory(this, "src").createChildDirectory(this, "subdir"));
 
     GoApplicationLibrariesService.getInstance().setLibraryRootUrls(goPath.getUrl());
     assertLibrary(Collections.singletonList(goPathContent.getUrl()), "temp:///src");
 
-    VirtualFile contentRoot = goPathContent.createChildDirectory(this, "contentRoot");
+    VirtualFile contentRoot = runWriteAction(() -> goPathContent.createChildDirectory(this, "contentRoot"));
     addContentRoot(contentRoot);
     assertLibrary(Collections.singletonList(goPathContent.getUrl()), "temp:///src", contentRoot.getUrl());
   }
 
   private void addContentRoot(@NotNull VirtualFile contentRoot) {
     ModifiableRootModel model = ModuleRootManager.getInstance(myModule).getModifiableModel();
-      try {
+    try {
       model.addContentEntry(contentRoot);
-    contentRootsToClean.add(contentRoot);
-      model.commit();
+      contentRootsToClean.add(contentRoot.getUrl());
+      ApplicationManager.getApplication().runWriteAction(model::commit);
     }
     finally {
       if (!model.isDisposed()) model.dispose();
@@ -199,10 +213,5 @@ public class GoPathLibraryTest extends GoCodeInsightFixtureTestCase {
     VirtualFile goPath = VfsUtil.findFileByIoFile(FileUtil.createTempDirectory("go", "path"), true);
     tempRootsToClean.add(goPath);
     return goPath;
-  }
-
-  @Override
-  protected boolean isWriteActionRequired() {
-    return true;
   }
 }
