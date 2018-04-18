@@ -116,7 +116,7 @@ test {
 
 task preparePerformanceTestData << {
   downloadAndUnzip('https://storage.googleapis.com/golang/go1.5.1.src.tar.gz', 'go', 'go')
-  downloadAndUnzip('https://github.com/docker/docker/archive/v1.9.1.tar.gz', 'docker-1.9.1', 'docker')
+  downloadAndUnzip('https://github.com/docker/docker/archive/v1.9.1.tar.gz', 'moby-1.9.1', 'docker')
 }
 
 task performanceTest(type: Test, group: 'Verification', dependsOn: [classes, testClasses, preparePerformanceTestData]) {
