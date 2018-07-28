@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GoBuildingRunner extends AsyncProgramRunner {
   private static final String ID = "GoBuildingRunner";
@@ -77,12 +78,13 @@ public class GoBuildingRunner extends AsyncProgramRunner {
 
   @NotNull
   @Override
-  protected Promise<RunProfileStarter> execute(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state)
+  protected Promise<RunContentDescriptor> execute(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state)
     throws ExecutionException {
     File outputFile = getOutputFile(environment, (GoApplicationRunningState)state);
     FileDocumentManager.getInstance().saveAllDocuments();
 
-    AsyncPromise<RunProfileStarter> buildingPromise = new AsyncPromise<>();
+    AsyncPromise<RunContentDescriptor> buildingPromise = new AsyncPromise<>();
+    final AtomicBoolean compilationFailed = new AtomicBoolean(false);
     GoHistoryProcessListener historyProcessListener = new GoHistoryProcessListener();
     ((GoApplicationRunningState)state).createCommonExecutor()
       .withParameters("build")
@@ -98,15 +100,14 @@ public class GoBuildingRunner extends AsyncProgramRunner {
         @Override
         public void processTerminated(ProcessEvent event) {
           super.processTerminated(event);
-          boolean compilationFailed = event.getExitCode() != 0;
-          if (((GoApplicationRunningState)state).isDebug()) {
-              buildingPromise.setResult(new MyDebugStarter(outputFile.getAbsolutePath(), historyProcessListener, compilationFailed));
-            }
-            else {
-              buildingPromise.setResult(new MyRunStarter(outputFile.getAbsolutePath(), historyProcessListener, compilationFailed));
-            }
+          compilationFailed.set(event.getExitCode() != 0);
         }
-      }).executeWithProgress(false);
+      }).executeWithProgress(true);
+    if (((GoApplicationRunningState) state).isDebug()) {
+      buildingPromise.setResult(new MyDebugStarter(outputFile.getAbsolutePath(), historyProcessListener, compilationFailed.get()).execute(state, environment));
+    } else {
+      buildingPromise.setResult(new MyRunStarter(outputFile.getAbsolutePath(), historyProcessListener, compilationFailed.get()).execute(state, environment));
+    }
     return buildingPromise;
   }
 
