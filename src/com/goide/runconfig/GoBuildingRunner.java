@@ -101,14 +101,11 @@ public class GoBuildingRunner extends AsyncProgramRunner {
           ((GoApplicationRunningState)state).setOutputFilePath(outputFile.getAbsolutePath());
           ((GoApplicationRunningState)state).setCompilationFailed(compilationFailed);
           try {
-            ExecutionResult executionResult = state.execute(environment.getExecutor(), GoBuildingRunner.this);
-            RunContentSupplier runContentDescriptor = debug
-              ? new DebugContentSupplier(executionResult, environment, (GoApplicationRunningState)state)
-              : () -> new RunContentBuilder(executionResult, environment).showRunContent(environment.getContentToReuse());
-            if (executionResult != null) {
+            RunContentDescriptorSupplier runContentSupplier = new RunContentDescriptorSupplier(environment, (GoApplicationRunningState)state);
+            if (runContentSupplier.executionResult != null) {
               ApplicationManager.getApplication().invokeLater(() -> {
                 try {
-                  buildingPromise.setResult(runContentDescriptor.get());
+                  buildingPromise.setResult(runContentSupplier.get());
                 }
                 catch (ExecutionException ex) {
                   buildingPromise.setError(ex);
@@ -172,34 +169,35 @@ public class GoBuildingRunner extends AsyncProgramRunner {
     return file.setExecutable(true);
   }
 
-  private static class DebugContentSupplier implements RunContentSupplier {
+  private class RunContentDescriptorSupplier {
+    private final boolean debug;
     private final int port;
     private final ExecutionEnvironment env;
-    private final ExecutionResult executionResult;
+    private ExecutionResult executionResult;
 
-    private DebugContentSupplier(ExecutionResult executionResult, ExecutionEnvironment env, GoApplicationRunningState state)
-      throws ExecutionException {
-      if (executionResult == null) {
-        if (executionResult == null) throw new ExecutionException("Cannot run debugger");
-      }
-      port = findFreePort();
-      state.setDebugPort(port);
-      this.executionResult = executionResult;
+    private RunContentDescriptorSupplier(ExecutionEnvironment env, GoApplicationRunningState state) throws ExecutionException {
       this.env = env;
+      debug = state.isDebug();
+      port = debug ? findFreePort() : -1;
+      state.setDebugPort(port);
+      executionResult = state.execute(env.getExecutor(), GoBuildingRunner.this);
+      if (debug && executionResult == null) throw new ExecutionException("Cannot run debugger");
     }
 
-    @Override
     public RunContentDescriptor get() throws ExecutionException {
-      return XDebuggerManager.getInstance(env.getProject()).startSession(env, new XDebugProcessStarter() {
-        @NotNull
-        @Override
-        public XDebugProcess start(@NotNull XDebugSession session) {
-          RemoteVmConnection connection = new DlvRemoteVmConnection();
-          DlvDebugProcess process = new DlvDebugProcess(session, connection, executionResult);
-          connection.open(new InetSocketAddress(InetAddress.getLoopbackAddress(), port));
-          return process;
-        }
-      }).getRunContentDescriptor();
+      if (debug) {
+        return XDebuggerManager.getInstance(env.getProject()).startSession(env, new XDebugProcessStarter() {
+          @NotNull
+          @Override
+          public XDebugProcess start(@NotNull XDebugSession session) {
+            RemoteVmConnection connection = new DlvRemoteVmConnection();
+            DlvDebugProcess process = new DlvDebugProcess(session, connection, executionResult);
+            connection.open(new InetSocketAddress(InetAddress.getLoopbackAddress(), port));
+            return process;
+          }
+        }).getRunContentDescriptor();
+      }
+      return new RunContentBuilder(executionResult, env).showRunContent(env.getContentToReuse());
     }
   }
 
@@ -211,9 +209,5 @@ public class GoBuildingRunner extends AsyncProgramRunner {
     catch (Exception ignore) {
     }
     throw new IllegalStateException("Could not find a free TCP/IP port to start dlv");
-  }
-
-  private interface RunContentSupplier {
-    RunContentDescriptor get() throws ExecutionException;
   }
 }
