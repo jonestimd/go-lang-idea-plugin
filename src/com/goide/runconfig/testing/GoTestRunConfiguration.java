@@ -70,11 +70,6 @@ public class GoTestRunConfiguration extends GoRunConfigurationBase<GoTestRunning
     return myTestFramework.newRunningState(env, module, this);
   }
 
-  @Override
-  protected ModuleBasedConfiguration createInstance() {
-    return new GoTestRunConfiguration(getProject(), getName(), GoTestRunConfigurationType.getInstance());
-  }
-
   @NotNull
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
