@@ -27,7 +27,7 @@ import org.jetbrains.io.NettyKt;
 
 import java.net.InetSocketAddress;
 
-public class DlvRemoteVmConnection extends RemoteVmConnection {
+public class DlvRemoteVmConnection extends RemoteVmConnection<Vm> {
   @NotNull
   @Override
   public Bootstrap createBootstrap(@NotNull InetSocketAddress address, @NotNull AsyncPromise<Vm> vmResult) {

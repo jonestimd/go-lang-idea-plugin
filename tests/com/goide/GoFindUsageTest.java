@@ -204,7 +204,7 @@ public class GoFindUsageTest extends GoCodeInsightFixtureTestCase {
         }
         catch (AssertionError e) {
           String message = e.getMessage();
-          assertTrue(message.contains("Access to tree elements not allowed in tests"));
+          assertTrue(message.contains("Access to tree elements not allowed"));
           assertTrue(message.contains("bar_test.go"));
           throw e;
         }
@@ -223,7 +223,7 @@ public class GoFindUsageTest extends GoCodeInsightFixtureTestCase {
         }
         catch (AssertionError e) {
           String message = e.getMessage();
-          assertTrue(message.contains("Access to tree elements not allowed in tests"));
+          assertTrue(message.contains("Access to tree elements not allowed"));
           assertTrue(message.contains("io.go"));
           throw e;
         }
@@ -251,7 +251,7 @@ public class GoFindUsageTest extends GoCodeInsightFixtureTestCase {
         }
         catch (AssertionError e) {
           String message = e.getMessage();
-          assertTrue(message.contains("Access to tree elements not allowed in tests"));
+          assertTrue(message.contains("Access to tree elements not allowed"));
           assertTrue(message.contains("bar.go"));
           throw e;
         }
