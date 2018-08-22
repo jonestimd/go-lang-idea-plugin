@@ -78,8 +78,8 @@ class DlvStackFrame extends XStackFrame {
                            @NotNull XEvaluationCallback callback,
                            @Nullable XSourcePosition expressionPosition) {
         myProcessor.send(new DlvRequest.EvalSymbol(expression, myId))
-          .done(variable -> callback.evaluated(createXValue(variable, AllIcons.Debugger.Watch)))
-          .rejected(throwable -> callback.errorOccurred(throwable.getMessage()));
+          .onSuccess(variable -> callback.evaluated(createXValue(variable, AllIcons.Debugger.Watch)))
+          .onError(throwable -> callback.errorOccurred(throwable.getMessage()));
       }
       
       @Nullable
@@ -146,7 +146,7 @@ class DlvStackFrame extends XStackFrame {
   public void customizePresentation(@NotNull ColoredTextContainer component) {
     super.customizePresentation(component);
     component.append(" at " + myLocation.function.name, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    component.setIcon(AllIcons.Debugger.StackFrame);
+    component.setIcon(AllIcons.Debugger.Frame);
   }
 
   @NotNull
@@ -156,10 +156,10 @@ class DlvStackFrame extends XStackFrame {
 
   @Override
   public void computeChildren(@NotNull XCompositeNode node) {
-    send(new DlvRequest.ListLocalVars(myId)).done(variables -> {
+    send(new DlvRequest.ListLocalVars(myId)).onSuccess(variables -> {
       XValueChildrenList xVars = new XValueChildrenList(variables.size());
       for (DlvApi.Variable v : variables) xVars.add(v.name, createXValue(v, GoIcons.VARIABLE));
-      send(new DlvRequest.ListFunctionArgs(myId)).done(args -> {
+      send(new DlvRequest.ListFunctionArgs(myId)).onSuccess(args -> {
         for (DlvApi.Variable v : args) xVars.add(v.name, createXValue(v, GoIcons.PARAMETER));
         node.addChildren(xVars, true);
       });

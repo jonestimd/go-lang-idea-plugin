@@ -108,12 +108,12 @@ class DlvXValue extends XNamedValue {
       @Override
       public void setValue(@NotNull XExpression expression, @NotNull XModificationCallback callback) {
         myProcessor.send(new DlvRequest.SetSymbol(myVariable.name, expression.getExpression(), myFrameId))
-          .processed(o -> {
+          .onProcessed(o -> {
             if (o != null) {
               callback.valueModified();
             }
           })
-          .rejected(throwable -> callback.errorOccurred(throwable.getMessage()));
+          .onError(throwable -> callback.errorOccurred(throwable.getMessage()));
       }
     };
   }

@@ -56,12 +56,8 @@ public class GoAddTrailingCommaInspection extends GoInspectionBase {
       if (!(e instanceof GoElement)) return;
       PsiErrorElement error = PsiTreeUtil.getNextSiblingOfType(e, PsiErrorElement.class);
       if (error == null) return;
-      new WriteCommandAction.Simple(project, getName(), e.getContainingFile()) {
-        @Override
-        protected void run() {
-          error.replace(GoElementFactory.createComma(project));
-        }
-      }.execute();
+      WriteCommandAction.writeCommandAction(project, e.getContainingFile()).withName(getName())
+        .run(() -> error.replace(GoElementFactory.createComma(project)));
     }
   }
 }

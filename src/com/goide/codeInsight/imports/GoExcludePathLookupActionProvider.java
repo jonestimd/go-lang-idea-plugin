@@ -82,7 +82,7 @@ public class GoExcludePathLookupActionProvider implements LookupActionProvider {
     private String myImportPath;
 
     protected ExcludePathAction(@NotNull Project project, @NotNull String importPath) {
-      super(AllIcons.Actions.Exclude, "Exclude '" + importPath + "'");
+      super(AllIcons.General.Remove, "Exclude '" + importPath + "'");
       myProject = project;
       myImportPath = importPath;
     }

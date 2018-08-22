@@ -41,7 +41,7 @@ public interface GoIcons {
   Icon PACKAGE = AllIcons.Nodes.Package;
   Icon MODULE_ICON = IconLoader.findIcon("/icons/goModule.png");
   Icon DEBUG = ICON;
-  Icon DIRECTORY = PlatformIcons.DIRECTORY_CLOSED_ICON;
+  Icon DIRECTORY = PlatformIcons.FOLDER_ICON;
 
   class Helper {
     private Helper() {}

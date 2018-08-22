@@ -43,13 +43,13 @@ public class GoParserUtil extends GeneratedParserUtilBase {
 
   @NotNull
   private static TObjectIntHashMap<String> getParsingModes(@NotNull PsiBuilder builder_) {
-    TObjectIntHashMap<String> flags = builder_.getUserDataUnprotected(MODES_KEY);
-    if (flags == null) builder_.putUserDataUnprotected(MODES_KEY, flags = new TObjectIntHashMap<>());
+    TObjectIntHashMap<String> flags = builder_.getUserData(MODES_KEY);
+    if (flags == null) builder_.putUserData(MODES_KEY, flags = new TObjectIntHashMap<>());
     return flags;
   }
 
   public static boolean consumeBlock(PsiBuilder builder_, @SuppressWarnings("UnusedParameters") int level) {
-    PsiFile file = builder_.getUserDataUnprotected(FileContextUtil.CONTAINING_FILE_KEY);
+    PsiFile file = builder_.getUserData(FileContextUtil.CONTAINING_FILE_KEY);
     VirtualFile data = file != null ? file.getUserData(IndexingDataKeys.VIRTUAL_FILE) : null;
     if (data == null) return false;
     int i = 0;
@@ -195,13 +195,5 @@ public class GoParserUtil extends GeneratedParserUtilBase {
     }
     catch (Exception ignored) {}
     return null;
-  }
-
-  public static boolean nextTokenIsSmart(PsiBuilder builder, IElementType token) {
-    return nextTokenIsFast(builder, token) || ErrorState.get(builder).completionState != null;
-  }
-
-  public static boolean nextTokenIsSmart(PsiBuilder builder, IElementType... tokens) {
-    return nextTokenIsFast(builder, tokens) || ErrorState.get(builder).completionState != null;
   }
 }
