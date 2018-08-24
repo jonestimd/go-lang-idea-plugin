@@ -18,8 +18,8 @@ package com.goide.project;
 
 import com.goide.sdk.GoSdkService;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ThreeState;
+import com.intellij.util.text.VersionComparatorUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,35 +28,35 @@ public class GoVendoringUtil {
     if (sdkVersion == null || sdkVersion.length() < 3) {
       return false;
     }
-    return StringUtil.parseDouble(sdkVersion.substring(0, 3), 0) >= 1.6;
+    return VersionComparatorUtil.compare(sdkVersion, "1.6") >= 0;
   }
 
   public static boolean vendoringCanBeDisabled(@Nullable String sdkVersion) {
     if (sdkVersion == null || sdkVersion.length() < 3) {
       return true;
     }
-    return StringUtil.parseDouble(sdkVersion.substring(0, 3), 0) < 1.7;
+    return VersionComparatorUtil.compare(sdkVersion, "1.7") < 0;
   }
 
   public static boolean supportsInternalPackages(@Nullable String sdkVersion) {
     if (sdkVersion == null || sdkVersion.length() < 3) {
       return false;
     }
-    return StringUtil.parseDouble(sdkVersion.substring(0, 3), 0) >= 1.5;
+    return VersionComparatorUtil.compare(sdkVersion, "1.5") >= 0;
   }
 
   public static boolean supportsSdkInternalPackages(@Nullable String sdkVersion) {
     if (sdkVersion == null || sdkVersion.length() < 3) {
       return false;
     }
-    return StringUtil.parseDouble(sdkVersion.substring(0, 3), 0) >= 1.4;
+    return VersionComparatorUtil.compare(sdkVersion, "1.4") >= 0;
   }
 
   public static boolean supportsVendoring(@Nullable String sdkVersion) {
     if (sdkVersion == null || sdkVersion.length() < 3) {
       return false;
     }
-    return StringUtil.parseDouble(sdkVersion.substring(0, 3), 0) >= 1.4;
+    return VersionComparatorUtil.compare(sdkVersion, "1.4") >= 0;
   }
 
   @Contract("null -> false")
