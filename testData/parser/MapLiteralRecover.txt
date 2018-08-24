@@ -25,7 +25,7 @@ GO_FILE
               TYPE
                 TYPE_REFERENCE_EXPRESSION
                   PsiElement(identifier)('string')
-            PsiErrorElement:'(', '.' or '{' expected, got ''
+            PsiErrorElement:'(', '.' or '{' expected
               <empty list>
       SIMPLE_STATEMENT
         SHORT_VAR_DECLARATION

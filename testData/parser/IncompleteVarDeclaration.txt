@@ -10,12 +10,12 @@ GO_FILE
     VAR_SPEC
       VAR_DEFINITION
         PsiElement(identifier)('a')
-      PsiErrorElement:',', <type> or '=' expected, got ''
+      PsiErrorElement:',', <type> or '=' expected
         <empty list>
     VAR_SPEC
       VAR_DEFINITION
         PsiElement(identifier)('b')
-      PsiErrorElement:',', <type> or '=' expected, got ''
+      PsiErrorElement:',', <type> or '=' expected
         <empty list>
     VAR_SPEC
       VAR_DEFINITION

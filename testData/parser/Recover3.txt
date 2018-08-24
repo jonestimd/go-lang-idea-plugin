@@ -26,5 +26,5 @@ GO_FILE
   FUNCTION_DECLARATION
     PsiElement(func)('func')
     PsiElement(identifier)('ex')
-    PsiErrorElement:'(' expected, unexpected end of file
+    PsiErrorElement:'(' expected
       <empty list>

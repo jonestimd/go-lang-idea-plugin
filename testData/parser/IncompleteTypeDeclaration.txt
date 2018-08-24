@@ -10,17 +10,17 @@ GO_FILE
     TYPE_SPEC
       SPEC_TYPE
         PsiElement(identifier)('a')
-        PsiErrorElement:<type> expected, got ''
+        PsiErrorElement:<type> expected
           <empty list>
     TYPE_SPEC
       SPEC_TYPE
         PsiElement(identifier)('b')
-        PsiErrorElement:<type> expected, got ''
+        PsiErrorElement:<type> expected
           <empty list>
     TYPE_SPEC
       SPEC_TYPE
         PsiElement(identifier)('c')
-        PsiErrorElement:<type> expected, got ''
+        PsiErrorElement:<type> expected
           <empty list>
     PsiElement())(')')
   FUNCTION_DECLARATION

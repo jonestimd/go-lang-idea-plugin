@@ -35,8 +35,8 @@ GO_FILE
             PsiElement(identifier)('ran')
       FOR_STATEMENT
         PsiElement(for)('for')
-      PsiErrorElement:'!', '&', '(', '*', '+', '-', ';', <-, <NL>, <expression>, '[', '^', chan, func, identifier, interface, map, struct, '{' or '}' expected, got 'ran'
-        <empty list>
+        PsiErrorElement:'!', '&', '*', '+', '-', <-, <conversion expr>, <expression>, '[', '^', identifier, map, struct or '{' expected, got 'ran'
+          <empty list>
       SIMPLE_STATEMENT
         LEFT_HAND_EXPR_LIST
           REFERENCE_EXPRESSION

@@ -8,7 +8,7 @@ import "io"
 func x(string) {}
 
 func  main() {
-    println([]string<error descr="'!=', '%', '&', '&^', '(', ')', '*', '+', ',', '-', '.', '...', '/', <, <<, <=, '==', '>', '>=', '>>', '^', '{' or '|' expected, got ')'">)</error>
+    println([]string<error descr="'(', ')', ',', '.', '...' or '{' expected, got ')'">)</error>
     ((<error descr="Type string is not an expression">string</error>))
     x((string)("foo"))
     x(<error descr="Type string is not an expression">string</error> + <error descr="Type string is not an expression">string</error>)
@@ -844,8 +844,7 @@ func _() {
 	_ = <error descr="Missing '">'
 </error>	;_ = <error descr="Missing '">' </error><error descr="',', ';', <NL> or '}' expected, got 'a'"> </error><error descr="Unresolved reference 'a'">a</error>
 	_ = 'a'
-	_ = <error descr="Missing '">'a</error><error descr="',', ';', <NL> or '}' expected, got ''
-'"> </error><error descr="Missing '">'
+	_ = <error descr="Missing '">'a</error><error descr="',', ';', <NL> or '}' expected, got '''"> </error><error descr="Missing '">'
 </error>}
 
 func _() {
@@ -869,4 +868,4 @@ var (
     }
 )
 
-func (c <error>bufio</error>.Reader) aa(d <error>bufio</error>.MaxScanTokenSize){}
+func (c <error descr="Unresolved type 'bufio'">bufio</error>.Reader) aa(d <error descr="Unresolved type 'bufio'">bufio</error>.MaxScanTokenSize){}

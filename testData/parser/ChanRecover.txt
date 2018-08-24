@@ -696,8 +696,8 @@ GO_FILE
         LEFT_HAND_EXPR_LIST
           UNARY_EXPR
             PsiElement(<-)('<-')
-          PsiErrorElement:'!', '!=', '%', '&', '&^', '(', '*', '+', '++', '-', '--', '/', <, <-, <<, <=, <channel type>, <expression>, <string literal>, '==', '>', '>=', '>>', '[', '^', chan, func, identifier, interface, map, struct or '|' expected, got 'chan'
-            <empty list>
+            PsiErrorElement:'!', '!=', '%', '&', '&^', '(', '*', '+', '++', '-', '--', '/', <, <-, <<, <=, <channel type>, <composite lit>, <expression>, <string literal>, '==', '>', '>=', '>>', '[', '^', chan, func, identifier, interface, map, struct or '|' expected, got 'chan'
+              <empty list>
       PsiElement(chan)('chan')
       SIMPLE_STATEMENT
         LEFT_HAND_EXPR_LIST
@@ -710,8 +710,8 @@ GO_FILE
             PsiElement(<-)('<-')
             UNARY_EXPR
               PsiElement(<-)('<-')
-          PsiErrorElement:'!', '!=', '%', '&', '&^', '(', '*', '+', '++', '-', '--', '/', <, <-, <<, <=, <channel type>, <expression>, <string literal>, '==', '>', '>=', '>>', '[', '^', chan, func, identifier, interface, map, struct or '|' expected, got 'chan'
-            <empty list>
+              PsiErrorElement:'!', '!=', '%', '&', '&^', '(', '*', '+', '++', '-', '--', '/', <, <-, <<, <=, <channel type>, <composite lit>, <expression>, <string literal>, '==', '>', '>=', '>>', '[', '^', chan, func, identifier, interface, map, struct or '|' expected, got 'chan'
+                <empty list>
       PsiElement(chan)('chan')
       SIMPLE_STATEMENT
         LEFT_HAND_EXPR_LIST
@@ -739,8 +739,8 @@ GO_FILE
         LEFT_HAND_EXPR_LIST
           UNARY_EXPR
             PsiElement(<-)('<-')
-          PsiErrorElement:'!', '!=', '%', '&', '&^', '(', '*', '+', '++', '-', '--', '/', <, <-, <<, <=, <channel type>, <expression>, <string literal>, '==', '>', '>=', '>>', '[', '^', chan, func, identifier, interface, map, struct or '|' expected, got 'chan'
-            <empty list>
+            PsiErrorElement:'!', '!=', '%', '&', '&^', '(', '*', '+', '++', '-', '--', '/', <, <-, <<, <=, <channel type>, <composite lit>, <expression>, <string literal>, '==', '>', '>=', '>>', '[', '^', chan, func, identifier, interface, map, struct or '|' expected, got 'chan'
+              <empty list>
       PsiElement(chan)('chan')
       SIMPLE_STATEMENT
         LEFT_HAND_EXPR_LIST

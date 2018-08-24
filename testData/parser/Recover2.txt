@@ -130,7 +130,7 @@ GO_FILE
               TYPE
                 TYPE_REFERENCE_EXPRESSION
                   PsiElement(identifier)('string')
-            PsiErrorElement:'!=', '%', '&', '&^', '(', '*', '+', '++', '-', '--', '.', '/', <, <<, <=, '==', '>', '>=', '>>', '^', '{' or '|' expected, got ''
+            PsiErrorElement:'!=', '%', '&', '&^', '(', '*', '+', '++', '-', '--', '.', '/', <, <<, <=, '==', '>', '>=', '>>', '^', '{' or '|' expected
               <empty list>
       PsiElement(})('}')
   FUNCTION_DECLARATION
