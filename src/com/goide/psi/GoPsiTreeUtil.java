@@ -21,56 +21,16 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 
 public class GoPsiTreeUtil extends PsiTreeUtil {
-  @Nullable
-  public static <T extends PsiElement> T getStubChildOfType(@Nullable PsiElement element, @NotNull Class<T> aClass) {
-    if (element == null) return null;
-    StubElement<?> stub = element instanceof StubBasedPsiElement ? ((StubBasedPsiElement)element).getStub() : null;
-    if (stub == null) {
-      return getChildOfType(element, aClass);
-    }
-    for (StubElement childStub : stub.getChildrenStubs()) {
-      PsiElement child = childStub.getPsi();
-      if (aClass.isInstance(child)) {
-        //noinspection unchecked
-        return (T)child;
-      }
-    }
-    return null;
-  }
-
-  @NotNull
-  public static <T extends PsiElement> List<T> getStubChildrenOfTypeAsList(@Nullable PsiElement element, @NotNull Class<T> aClass) {
-    if (element == null) return Collections.emptyList();
-    StubElement<?> stub = element instanceof StubBasedPsiElement ? ((StubBasedPsiElement)element).getStub() : null;
-    if (stub == null) {
-      return getChildrenOfTypeAsList(element, aClass);
-    }
-
-    List<T> result = new SmartList<T>();
-    for (StubElement childStub : stub.getChildrenStubs()) {
-      PsiElement child = childStub.getPsi();
-      if (aClass.isInstance(child)) {
-        //noinspection unchecked
-        result.add((T)child);
-      }
-    }
-    return result;
-  }
-
   @Nullable
   private static Couple<PsiElement> getElementRange(@NotNull GoFile file, int startOffset, int endOffset) {
     PsiElement startElement = findNotWhiteSpaceElementAtOffset(file, startOffset, true);
