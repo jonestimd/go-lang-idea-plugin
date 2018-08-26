@@ -19,6 +19,8 @@ package com.goide.runconfig.testing.frameworks.gotest;
 import com.goide.psi.GoFunctionDeclaration;
 import com.goide.psi.GoFunctionOrMethodDeclaration;
 import com.goide.runconfig.testing.*;
+import com.goide.runconfig.testing.debug.GoTestDebugRunningState;
+import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.OutputToGeneralTestEventsConverter;
@@ -75,6 +77,8 @@ public class GotestFramework extends GoTestFramework {
   protected GoTestRunningState newRunningState(@NotNull ExecutionEnvironment env,
                                                @NotNull Module module,
                                                @NotNull GoTestRunConfiguration runConfiguration) {
+    if (DefaultDebugExecutor.EXECUTOR_ID.equals(env.getExecutor().getId()))
+      return new GoTestDebugRunningState(env, module, runConfiguration);
     return new GoTestRunningState(env, module, runConfiguration);
   }
 

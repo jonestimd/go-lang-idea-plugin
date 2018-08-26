@@ -160,6 +160,7 @@
     <configurationType implementation="com.goide.runconfig.application.GoApplicationRunConfigurationType"/>
 
     <!-- test -->
+    <programRunner implementation="com.goide.runconfig.testing.debug.GoTestDebugRunner"/>
     <runConfigurationProducer implementation="com.goide.runconfig.testing.frameworks.gotest.GotestRunConfigurationProducer"/>
     <runConfigurationProducer implementation="com.goide.runconfig.testing.frameworks.gocheck.GocheckRunConfigurationProducer"/>
     <runConfigurationProducer implementation="com.goide.runconfig.testing.frameworks.gobench.GobenchRunConfigurationProducer"/>

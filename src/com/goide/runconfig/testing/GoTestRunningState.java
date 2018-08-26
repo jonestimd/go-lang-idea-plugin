@@ -25,6 +25,7 @@ import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
+import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.ProcessHandler;
@@ -54,8 +55,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class GoTestRunningState extends GoRunningState<GoTestRunConfiguration> {
-  private String myCoverageFilePath;
-  private String myFailedTestsPattern;
+  protected String myCoverageFilePath;
+  protected String myFailedTestsPattern;
 
   public GoTestRunningState(@NotNull ExecutionEnvironment env, @NotNull Module module, @NotNull GoTestRunConfiguration configuration) {
     super(env, module, configuration);
@@ -64,6 +65,10 @@ public class GoTestRunningState extends GoRunningState<GoTestRunConfiguration> {
   @NotNull
   @Override
   public ExecutionResult execute(@NotNull Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
+    if (DefaultDebugExecutor.EXECUTOR_ID.equals(getEnvironment().getExecutor().getId())) { // the debug does its own implementation...
+      return super.execute(executor, runner);
+    }
+
     ProcessHandler processHandler = startProcess();
     TextConsoleBuilder consoleBuilder = TextConsoleBuilderFactory.getInstance().createBuilder(myConfiguration.getProject());
     setConsoleBuilder(consoleBuilder);
