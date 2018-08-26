@@ -255,8 +255,7 @@ public class GoSdkUtil {
     if (version.startsWith("devel")) {
       return "src";
     }
-    String[] parts = version.split("\\.");
-    if (parts.length > 1 && StringUtil.parseInt(parts[1], 4) < 4) {
+    if (VersionComparatorUtil.compare(version, "1.4") < 0) {
       return "src/pkg";
     }
     return "src";
