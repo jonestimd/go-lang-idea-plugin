@@ -65,10 +65,6 @@ public class GoTestRunningState extends GoRunningState<GoTestRunConfiguration> {
   @NotNull
   @Override
   public ExecutionResult execute(@NotNull Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
-    if (DefaultDebugExecutor.EXECUTOR_ID.equals(getEnvironment().getExecutor().getId())) { // the debug does its own implementation...
-      return super.execute(executor, runner);
-    }
-
     ProcessHandler processHandler = startProcess();
     TextConsoleBuilder consoleBuilder = TextConsoleBuilderFactory.getInstance().createBuilder(myConfiguration.getProject());
     setConsoleBuilder(consoleBuilder);

@@ -140,6 +140,7 @@ public class GoTestDebugRunningState extends GoTestRunningState {
         case PACKAGE:
           executor = executor.withParameters("test", myConfiguration.getPackage());
           executor = executor.withParameters("--listen=localhost:" + myDebugPort, "--headless=true", "--");
+          executor = executor.withParameters("-test.v");
           addFilterParameter(executor, ObjectUtils.notNull(myFailedTestsPattern, myConfiguration.getPattern()));
           break;
         case FILE:
@@ -161,6 +162,7 @@ public class GoTestDebugRunningState extends GoTestRunningState {
           //executor.withParameters(importPath);
           executor = executor.withParameters("test", importPath);
           executor = executor.withParameters("--listen=localhost:" + myDebugPort, "--headless=true", "--");
+          executor = executor.withParameters("-test.v");
           addFilterParameter(executor, myFailedTestsPattern != null ? myFailedTestsPattern : buildFilterPatternForFile((GoFile)file));
           break;
       }
