@@ -81,43 +81,27 @@ public class GoTestDebugRunner extends AsyncProgramRunner {
 
     AsyncPromise<RunContentDescriptor> buildingPromise = new AsyncPromise<>();
     GoHistoryProcessListener historyProcessListener = new GoHistoryProcessListener();
-    boolean debug = ((GoTestDebugRunningState)state).isDebug();
-    ((GoTestDebugRunningState)state).createCommonExecutor()
-      .withParameters("test")
-      .withParameterString(((GoTestDebugRunningState)state).getGoBuildParams())
-      .withParameters("-o", outputFile.getAbsolutePath())
-      .withParameters(debug ? new String[]{"-gcflags", "-N -l"} : ArrayUtil.EMPTY_STRING_ARRAY)
-      .withParameters(((GoTestDebugRunningState)state).getTarget())
-      .disablePty()
-      .withPresentableName("go test")
-      .withProcessListener(historyProcessListener)
-      .withProcessListener(new ProcessAdapter() {
-        @Override
-        public void processTerminated(ProcessEvent event) {
-          super.processTerminated(event);
-          boolean compilationFailed = event.getExitCode() != 0;
-          ((GoTestDebugRunningState)state).setHistoryProcessHandler(historyProcessListener);
-          ((GoTestDebugRunningState)state).setOutputFilePath(outputFile.getAbsolutePath());
-          ((GoTestDebugRunningState)state).setCompilationFailed(compilationFailed);
+
+    ((GoTestDebugRunningState)state).setHistoryProcessHandler(historyProcessListener);
+    ((GoTestDebugRunningState)state).setOutputFilePath(outputFile.getAbsolutePath());
+    try {
+      GoTestDebugRunner.RunContentDescriptorSupplier
+        runContentSupplier = new GoTestDebugRunner.RunContentDescriptorSupplier(environment, (GoTestDebugRunningState)state);
+      if (runContentSupplier.executionResult != null) {
+        ApplicationManager.getApplication().invokeLater(() -> {
           try {
-            GoTestDebugRunner.RunContentDescriptorSupplier
-              runContentSupplier = new GoTestDebugRunner.RunContentDescriptorSupplier(environment, (GoTestDebugRunningState)state);
-            if (runContentSupplier.executionResult != null) {
-              ApplicationManager.getApplication().invokeLater(() -> {
-                try {
-                  buildingPromise.setResult(runContentSupplier.get());
-                }
-                catch (ExecutionException ex) {
-                  buildingPromise.setError(ex);
-                }
-              });
-            }
-            else buildingPromise.setResult(null);
-          } catch (Throwable ex) {
+            buildingPromise.setResult(runContentSupplier.get());
+          }
+          catch (ExecutionException ex) {
             buildingPromise.setError(ex);
           }
-        }
-      }).executeWithProgress(false);
+        });
+      }
+      else buildingPromise.setResult(null);
+    } catch (Throwable ex) {
+      buildingPromise.setError(ex);
+    }
+
     return buildingPromise;
   }
 
