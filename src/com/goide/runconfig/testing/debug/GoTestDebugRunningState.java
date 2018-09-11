@@ -48,7 +48,6 @@ public class GoTestDebugRunningState extends GoTestRunningState {
     private String myOutputFilePath;
     @Nullable private GoHistoryProcessListener myHistoryProcessHandler;
     private int myDebugPort = 59090;
-    private boolean myCompilationFailed;
 
     public GoTestDebugRunningState(@NotNull ExecutionEnvironment env, @NotNull Module module,
                                      @NotNull GoTestRunConfiguration configuration) {
@@ -207,9 +206,5 @@ public class GoTestDebugRunningState extends GoTestRunningState {
 
     public void setDebugPort(int debugPort) {
       myDebugPort = debugPort;
-    }
-
-    public void setCompilationFailed(boolean compilationFailed) {
-      myCompilationFailed = compilationFailed;
     }
   }
