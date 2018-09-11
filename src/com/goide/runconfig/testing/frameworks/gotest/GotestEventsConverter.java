@@ -32,6 +32,7 @@ public class GotestEventsConverter extends GoTestEventsConverterBaseImpl {
   private static final Pattern SKIP = Pattern.compile("--- SKIP:\\s+(" + GoConstants.TEST_NAME_REGEX + ")");
   private static final Pattern FAILED = Pattern.compile("--- FAIL:\\s+(" + GoConstants.TEST_NAME_REGEX + ")");
   private static final Pattern FINISHED = Pattern.compile("^(PASS)|(FAIL)$");
+  private static final Pattern TERMINATED = Pattern.compile("^Process finished with exit code");
 
   public GotestEventsConverter(@NotNull TestConsoleProperties consoleProperties) {
     super(GotestFramework.NAME, consoleProperties);
@@ -60,6 +61,10 @@ public class GotestEventsConverter extends GoTestEventsConverterBaseImpl {
       return line.length();
     }
     if (FINISHED.matcher(line).find(start)) {
+      finishDelayedTest(visitor);
+      return line.length();
+    }
+    if (TERMINATED.matcher(line).find(start)) {
       finishDelayedTest(visitor);
       return line.length();
     }
