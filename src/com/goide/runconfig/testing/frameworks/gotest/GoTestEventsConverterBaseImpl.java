@@ -144,8 +144,11 @@ public abstract class GoTestEventsConverterBaseImpl extends OutputToGeneralTestE
   }
 
   protected boolean finishDelayedTest(ServiceMessageVisitor visitor) throws ParseException {
-    if (myCurrentTestName != null && myCurrentTestResult != null) {
-      finishTestInner(myCurrentTestName, myCurrentTestResult, visitor);
+    if (myCurrentTestName != null) {
+      if (myCurrentTestResult != null)
+        finishTestInner(myCurrentTestName, myCurrentTestResult, visitor);
+      else // otherwise the test failed, e.g crashed
+        finishTestInner(myCurrentTestName, TestResult.FAILED, visitor);
       return true;
     }
     return false;
